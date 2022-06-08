@@ -38,7 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # for 'dj_rest_auth.registration'
+    'django.contrib.sites',
+    
+    # DRF(pip install djangorestframework)
+    'rest_framework',
+    'rest_framework.authtoken',
+    
+    # for 'dj_rest_auth.registration'
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+    # Social Login(pip install dj-rest-auth)
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -122,3 +140,37 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+
+REST_USE_JWT = True
+
+JWT_AUTH_COOKIE = 'token'
+JWT_AUTH_REFRESH_COOKIE = 'refresh-token'
+
+from datetime import timedelta
+
+# 참고 (https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+SIMPLE_JWT = {
+    # Access token 의 lifetime
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    # Refresh token 의 lifetime
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    # Refresh token과 Access token 을 새로운 시간에 맞춰 발행
+    # 만약 BLACKLIST_AFTER_ROTATION 이 True 인 경우 사용된 Refresh token 은 자동으로 blacklist 에 추가
+    'ROTATE_REFRESH_TOKENS': False,
+    # 이 기능을 사용하려면 settings.py 의 INSTALLED_APPS 에 'rest_framework_simplejwt.token_blacklist' 를 추가
+    'BLACKLIST_AFTER_ROTATION': False,
+    # 설정되면 auth_user table 에 last_login field 가 업데이트 됨
+    'UPDATE_LAST_LOGIN': False,
+    # Token 의 알고리즘
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+
+    'AUTH_HEADER_TYPES': ('token',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+}
