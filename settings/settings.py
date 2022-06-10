@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     # Social Login(pip install dj-rest-auth)
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    
+    # App
+    'authentication',
 ]
 
 SITE_ID = 1
@@ -173,4 +176,16 @@ SIMPLE_JWT = {
 
     'AUTH_HEADER_TYPES': ('token',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+}
+
+# OSError [Errno 99] 안나오도록 하기 위해서 설정
+# rest_auth 가 email verification 을 위한 신호를 보내서 생기는 오류
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+AUTH_USER_MODEL = 'authentication.User'
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'authentication.api.serializers.UserSerializer',
+}
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'authentication.api.serializers.UserSerializer',
 }
