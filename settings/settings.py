@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    # Naver
+    # from django.conf import settings
+    # SocialApp.objects.create(provider="Naver", name="Naver", client_id=settings.NAVER_CLIENT_KEY, secret=settings.NAVER_SECRET_KEY)
+    'allauth.socialaccount.providers.naver',
     
     # Social Login(pip install dj-rest-auth)
     'dj_rest_auth',
@@ -57,8 +61,15 @@ INSTALLED_APPS = [
     
     # App
     'authentication',
+    
+    # Extensions
+    'django_extensions',
 ]
 
+# site 자동 변경에 대해서
+# python manage.py shell_plus
+# site = Site.objects.first()
+# localhost:8000
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -187,5 +198,6 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'authentication.api.serializers.UserSerializer',
 }
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'authentication.api.serializers.UserSerializer',
+    'REGISTER_SERIALIZER': 'authentication.api.serializers.UserRegistrationSerializer',
 }
+ACCOUNT_ADAPTER = 'authentication.api.adapters.UserAdapter'
