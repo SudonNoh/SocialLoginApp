@@ -14,10 +14,10 @@ def secret_key(BASE_DIR):
         except KeyError:
             error_msg = "Set the {0} enviroment variable".format(setting)
             raise ImproperlyConfigured(error_msg)
-    
         
     SECRET_KEY = get_keys("SECRET_KEY")
     NAVER_CLIENT_ID = get_keys("NAVER_CLIENT_ID")
     NAVER_SECRET_KEY = get_keys("NAVER_SECRET_KEY")
+    STATE = get_keys("STATE")
     
-    return SECRET_KEY, NAVER_CLIENT_ID, NAVER_SECRET_KEY
+    return SECRET_KEY, NAVER_CLIENT_ID, NAVER_SECRET_KEY, STATE
