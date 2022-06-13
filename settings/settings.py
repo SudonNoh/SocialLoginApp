@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, STATE = keys.secret_key(BASE_DIR)
+SECRET_KEY, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, KAKAO_REST_API_KEY, KAKAO_SECRET_KEY, STATE = keys.secret_key(BASE_DIR)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # from django.conf import settings
     # SocialApp.objects.create(provider="Naver", name="Naver", client_id=settings.NAVER_CLIENT_KEY, secret=settings.NAVER_SECRET_KEY)
     'allauth.socialaccount.providers.naver',
+    'allauth.socialaccount.providers.kakao',
     
     # Social Login(pip install dj-rest-auth)
     'dj_rest_auth',
