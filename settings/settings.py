@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, KAKAO_REST_API_KEY, KAKAO_SECRET_KEY, STATE = keys.secret_key(BASE_DIR)
+SECRET_KEY, MAIN_DOMAIN, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, KAKAO_REST_API_KEY, KAKAO_SECRET_KEY, STATE = keys.secret_key(BASE_DIR)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

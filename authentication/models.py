@@ -8,7 +8,6 @@ from core.models import TimestampedModel
 class User(AbstractBaseUser, TimestampedModel, PermissionsMixin):
     username = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=255, unique=True)
     
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
@@ -16,7 +15,6 @@ class User(AbstractBaseUser, TimestampedModel, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         'username',
-        'phone_number',
     ]
     
     objects = UserManager()
