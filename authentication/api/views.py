@@ -9,7 +9,10 @@ from authentication.models import User
 from allauth.socialaccount.providers.kakao import views as kakao_views
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
+from django.http import JsonResponse
 
+
+# main domain url
 MAIN_DOMAIN = settings.MAIN_DOMAIN
 
 
@@ -17,23 +20,45 @@ class KakaoLoginAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        kakao_rest_api_key = settings.KAKAO_REST_API_KEY
-        redirect_uri = MAIN_DOMAIN + "/user/kakao/callback"
+        # key of kakao
+        api_key = settings.KAKAO_REST_API_KEY
+        # type of response
+        response_type = "code"
+        # redirect uri
+        uri = MAIN_DOMAIN + "/user/kakao/callback"
+        # request url
+        url = 'https://kauth.kakao.com/oauth/authorize'
 
         return redirect(
-            f'https://kauth.kakao.com/oauth/authorize?client_id={kakao_rest_api_key}&redirect_uri={redirect_uri}&response_type=code'
+            f'{url}?client_id={api_key}&redirect_uri={uri}&response_type={response_type}'
         )
 
-# 초기 단계에서의 callback 함수
-# class KakaoCallbackAPIView(APIView):
-#     permission_classes = (AllowAny,)
 
-#     def get(self, request, *args, **kwargs):
-#         params = urllib.parse.urlencode(request.GET)
-#         return redirect(f'http://127.0.0.1:8000/account/registration/')
+class NaverLoginAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        # key of naver
+        client_id = settings.NAVER_CLIENT_KEY
+        # type of response
+        response_type = "code"
+        # redirect uri
+        uri = MAIN_DOMAIN + "/user/naver/callback"
+        # state
+        state = settings.STATE
+        # request url
+        url = 'https://nid.naver.com/oauth2.0/authorize'
+
+        return redirect(
+            f'{url}?response_type={response_type}&client_id={client_id}&redirect_uri={uri}&state={state}'
+        )
 
 
 class KakaoException(Exception):
+    pass
+
+
+class NaverException(Exception):
     pass
 
 
@@ -42,12 +67,12 @@ class KakaoCallbackAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            kakao_rest_api_key = settings.KAKAO_REST_API_KEY
-            redirect_uri = settings.MAIN_DOMAIN + "/user/kakao/callback"
+            api_key = settings.KAKAO_REST_API_KEY
+            redirect_uri = MAIN_DOMAIN + "/user/kakao/callback"
             user_token = request.GET.get("code")
             grant_type = 'authorization_code'
 
-            parameter = f"grant_type={grant_type}&client_id={kakao_rest_api_key}&redirect_uri={redirect_uri}&code={user_token}"
+            parameter = f"grant_type={grant_type}&client_id={api_key}&redirect_uri={redirect_uri}&code={user_token}"
 
             # post request
             token_request = requests.get(
@@ -70,7 +95,7 @@ class KakaoCallbackAPIView(APIView):
 
             # parsing profile json
             kakao_account = profile_json.get("kakao_account")
-            
+
             email = kakao_account["email"]
             if email is None:
                 raise KakaoException()
@@ -98,6 +123,7 @@ class KakaoCallbackAPIView(APIView):
                         username=nickname,
                         email=email,
                     )
+                    return JsonResponse(accept_json)
 
             except User.DoesNotExist:
                 data = {'code': user_token, 'access_token': access_token}
@@ -111,11 +137,25 @@ class KakaoCallbackAPIView(APIView):
                     username=nickname,
                     email=email,
                 )
-                return redirect(MAIN_DOMAIN+"/user/registration/")
+                return JsonResponse(accept_json)
+                # return redirect(MAIN_DOMAIN+"/user/registration/")
 
         except KakaoException:
             return redirect(MAIN_DOMAIN+"/admin/")
 
+
 class KakaoToDjangoLoginView(SocialLoginView):
     adapter_class = kakao_views.KakaoOAuth2Adapter
     client_clss = OAuth2Client
+
+
+class NaverCallbackAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            client_id = settings.NAVER_CLIENT_KEY
+            grant_type = 'authorization_code'
+            redirect_uri = settings.MAIN_DOMAIN + "/user/naver/callback"
+        except:
+            raise NaverException

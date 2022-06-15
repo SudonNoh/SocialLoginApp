@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import keys
 
@@ -21,7 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY, MAIN_DOMAIN, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, KAKAO_REST_API_KEY, KAKAO_SECRET_KEY, STATE = keys.secret_key(BASE_DIR)
+SECRET_KEY, MAIN_DOMAIN, NAVER_CLIENT_KEY, NAVER_SECRET_KEY, KAKAO_REST_API_KEY, KAKAO_SECRET_KEY, STATE = keys.secret_key(
+    BASE_DIR)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,14 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # for 'dj_rest_auth.registration'
     'django.contrib.sites',
-    
+
     # DRF(pip install djangorestframework)
     'rest_framework',
     'rest_framework.authtoken',
-    
+
     # for 'dj_rest_auth.registration'
     'allauth',
     'allauth.account',
@@ -55,14 +57,14 @@ INSTALLED_APPS = [
     # SocialApp.objects.create(provider="Naver", name="Naver", client_id=settings.NAVER_CLIENT_KEY, secret=settings.NAVER_SECRET_KEY)
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.kakao',
-    
+
     # Social Login(pip install dj-rest-auth)
     'dj_rest_auth',
     'dj_rest_auth.registration',
-    
+
     # App
     'authentication',
-    
+
     # Extensions
     'django_extensions',
 ]
@@ -71,6 +73,8 @@ INSTALLED_APPS = [
 # python manage.py shell_plus
 # site = Site.objects.first()
 # localhost:8000
+# site 의 id로 개발서버인 127.0.0.1:800을 사용하고 싶으면
+# Site model의 id를 해당 url로 입력해주면 된다.
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -157,7 +161,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     )
 }
@@ -167,7 +172,6 @@ REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'token'
 JWT_AUTH_REFRESH_COOKIE = 'refresh-token'
 
-from datetime import timedelta
 
 # 참고 (https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
 SIMPLE_JWT = {
@@ -202,3 +206,20 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'authentication.api.serializers.UserRegistrationSerializer',
 }
 ACCOUNT_ADAPTER = 'authentication.api.adapters.UserAdapter'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'kakao': {
+        'APP':{
+            'client_id':KAKAO_REST_API_KEY,
+            'secret':KAKAO_SECRET_KEY,
+            'key':''
+        }
+    },
+    'naver': {
+        'APP':{
+            'client_id':NAVER_CLIENT_KEY,
+            'secret':NAVER_SECRET_KEY,
+            'key':''
+        }
+    }
+}
