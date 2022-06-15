@@ -119,11 +119,11 @@ class KakaoCallbackAPIView(APIView):
                     accept_jwt = accept_json.get("token")
 
                     # profile info update
-                    User.objects.get(email=email).update(
+                    user = User.objects.get(email=email)
+                    user.update(
                         username=nickname,
                         email=email,
                     )
-                    return JsonResponse(accept_json)
 
             except User.DoesNotExist:
                 data = {'code': user_token, 'access_token': access_token}
@@ -133,12 +133,12 @@ class KakaoCallbackAPIView(APIView):
                 accept_json = accept.json()
                 accept_jwt = accept_json.get("token")
 
-                User.objects.get(email=email).update(
+                user = User.objects.get(email=email)
+                user.update(
                     username=nickname,
                     email=email,
                 )
-                return JsonResponse(accept_json)
-                # return redirect(MAIN_DOMAIN+"/user/registration/")
+                return redirect(MAIN_DOMAIN+"/user/registration/")
 
         except KakaoException:
             return redirect(MAIN_DOMAIN+"/admin/")

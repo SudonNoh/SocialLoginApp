@@ -75,7 +75,7 @@ INSTALLED_APPS = [
 # localhost:8000
 # site 의 id로 개발서버인 127.0.0.1:800을 사용하고 싶으면
 # Site model의 id를 해당 url로 입력해주면 된다.
-SITE_ID = 1
+SITE_ID = 3
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
