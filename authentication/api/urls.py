@@ -9,6 +9,4 @@ urlpatterns = [
     path('kakao/login/', KakaoLoginAPIView.as_view()),
     path('kakao/callback', KakaoCallbackAPIView.as_view()),
     path('kakao/login/finish', KakaoToDjangoLoginView.as_view()),
-    path('naver/login/', NaverLoginAPIView.as_view()),
-    path('naver/callback', NaverCallbackAPIView.as_view()),
 ]
