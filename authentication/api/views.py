@@ -34,26 +34,6 @@ class KakaoLoginAPIView(APIView):
         )
 
 
-class NaverLoginAPIView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        # key of naver
-        client_id = settings.NAVER_CLIENT_KEY
-        # type of response
-        response_type = "code"
-        # redirect uri
-        uri = MAIN_DOMAIN + "/user/naver/callback"
-        # state
-        state = settings.STATE
-        # request url
-        url = 'https://nid.naver.com/oauth2.0/authorize'
-
-        return redirect(
-            f'{url}?response_type={response_type}&client_id={client_id}&redirect_uri={uri}&state={state}'
-        )
-
-
 class KakaoException(Exception):
     pass
 
@@ -148,14 +128,3 @@ class KakaoToDjangoLoginView(SocialLoginView):
     adapter_class = kakao_views.KakaoOAuth2Adapter
     client_clss = OAuth2Client
 
-
-class NaverCallbackAPIView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        try:
-            client_id = settings.NAVER_CLIENT_KEY
-            grant_type = 'authorization_code'
-            redirect_uri = settings.MAIN_DOMAIN + "/user/naver/callback"
-        except:
-            raise NaverException
