@@ -126,5 +126,5 @@ class KakaoCallbackAPIView(APIView):
 
 class KakaoToDjangoLoginView(SocialLoginView):
     adapter_class = kakao_views.KakaoOAuth2Adapter
-    client_clss = OAuth2Client
+    client_class = OAuth2Client
 
